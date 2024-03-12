@@ -1,55 +1,79 @@
-import java.io.*;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Game{
-    public static void main(String[] args){
+public class Main {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Random rand = new Random();
-        char[][] plansza = new char[6][8];
-//        for(int i=0; i<plansza.length; i++){
-//            for(int j=0; j<plansza[i].length; j++){
-//                System.out.print("o ");
-//            }
-//            System.out.println();
-//        }
-        Owca[] owca = new Owca[6];
-        for(int i=0; i<owca.length; i++){
-            owca[i] = new Owca();
+        Random randNum = new Random();
+        char mis = 'M';
+        Owca owca = new Owca('O');
+        char[][] plansza = new char[6][6];
+        int[] pozycjaOwcy = new int[8];
+        int pozycjaMisiaX = 5;
+        int pozycjaMisiaY = randNum.nextInt(6);
+
+        for(int i=0; i < pozycjaOwcy.length; i++){
+            pozycjaOwcy[i] = randNum.nextInt(plansza.length);
         }
-        int[] randPos = new int[8];
-        int[] randPos2 = new int[8];
-       for(int i=0 ; i< randPos.length ; i++){
-           randPos[i] = rand.nextInt(plansza.length-1)+1;
-           randPos2[i] = rand.nextInt(plansza.length-1)+1;
-       }
-        int iter=1;
-            for (int i = 0; i < 7; i++) {
-                    plansza[randPos[i]][randPos2[i]] = 'O';
-                }
-            for(int i=0; i<plansza.length; i++){
-                for(int j=0; j<plansza[i].length; j++){
-                    if (plansza[i][j] != plansza[randPos[i]][randPos2[i]]) {
-                        plansza[i][j] = '.';
-                    }
+        int x,y;
+        for(int i=0; i< 8; i++){
+            do{
+                x = pozycjaOwcy[i];
+                y = randNum.nextInt(plansza[0].length);
+            }while(plansza[x][y] == '0');
+            plansza[x][y] = 'O';
+        }
+
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                if(plansza[i][j] != 'O' && plansza[i][j] != 'M'){
+                plansza[i][j] = '-';
                 }
             }
-
-
-            for(int i=0; i<plansza.length; i++){
-            for(int j=0; j<plansza[i].length; j++){
-                System.out.print(plansza[i][j]+" ");
+        }
+        plansza[pozycjaMisiaX][pozycjaMisiaY] = mis;
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                System.out.print(plansza[i][j] + " ");
             }
             System.out.println();
+        }
+        int numRand = randNum.nextInt(5)+1; // Corrected to generate a random number in the range [0, 5]
+
+        System.out.println("Wylosowana liczba to: " + numRand);
+        int k = 0; // Corrected to start from 0
+        while (k != numRand) {
+            if (pozycjaMisiaX > 0) {
+                plansza[pozycjaMisiaX][pozycjaMisiaY] = '-';
+                pozycjaMisiaX--;
+                plansza[pozycjaMisiaX][pozycjaMisiaY] = mis;
+                k++;
+                System.out.println("Naciśnij spacje");
+                sc.nextLine();
+            }
+
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 6; j++) {
+                    System.out.print(plansza[i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+
+            if (plansza[0][pozycjaMisiaY] == mis) {
+                System.out.println("Meta! Gratulacje!");
+                break;
+            }
         }
     }
 }
 class Zwierze{
     int punkty;
 }
-class Mis extends Zwierze{
-    Mis(){}
-}
 class Owca extends Zwierze{
     int pktZaZjedzenie;
+    char znak;
+    Owca(char znak){
+        this.znak = znak;
+    }
 }
