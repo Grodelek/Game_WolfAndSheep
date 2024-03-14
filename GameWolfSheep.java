@@ -49,7 +49,10 @@ public class Main {
         //Rzut koscia dla Misia
         RzutKosciaM(plansza,pozycjaMisiaX,pozycjaMisiaY,pozycjaOwcyX,pozycjaOwcyY,mis);
         System.out.println("Następny rzut");
-        RzutKosciaM(plansza,mis.pozycjaX,mis.pozycjaY,pozycjaOwcyX,pozycjaOwcyY,mis);
+        //Rzucanie koscia dopoki mis lub Wilk nie dojdzie do mety
+        do {
+            RzutKosciaM(plansza, mis.pozycjaX, mis.pozycjaY, pozycjaOwcyX, pozycjaOwcyY, mis);
+        }while(plansza[0][pozycjaMisiaY] != mis.znak);
     }
     static void drukPlanszy(char[][] plansza){
         for (int i = 0; i < plansza.length; i++) {
@@ -99,7 +102,6 @@ public class Main {
         }
     }
 }
-
 class Zwierze {
     int punkty;
 }
@@ -124,3 +126,4 @@ class Wilk extends Zwierze{
         this.znak = znak;
     }
 }
+
