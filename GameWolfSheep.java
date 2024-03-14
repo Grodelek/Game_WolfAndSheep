@@ -4,56 +4,53 @@ import java.util.Scanner;
 public class Main {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Random randNum = new Random();
         Mis mis = new Mis('M');
-        Wilk wilk = new Wilk('W');
+        Wilk[] wilk = new Wilk[2];
+        Wilk wilki = new Wilk();
         Owca owca = new Owca('O');
-
         char[][] plansza = new char[12][12];
         int[] tabOwca = new int[30];
-        int pozycjaMisiaX = plansza.length-1;
+        int pozycjaMisiaX = plansza.length - 1;
         int pozycjaMisiaY = randNum.nextInt(plansza[0].length);
-        int pozycjaWilkaX = plansza.length-1;
+        int pozycjaWilkaX = plansza.length - 1;
         int pozycjaWilkaY = randNum.nextInt(plansza[0].length);
         int[] pozycjaOwcyX = new int[30];
         int[] pozycjaOwcyY = new int[30];
-        mis.punkty=0;
-        wilk.punkty=0;
+        for (int i = 0; i < wilk.length; i++) {
+            wilk[i] = new Wilk('W');
+        }
+        mis.punkty = 0;
+        wilki.punkty = wilk[0].punkty + wilk[1].punkty;
+
         for (int i = 0; i < tabOwca.length; i++) {
             tabOwca[i] = randNum.nextInt(plansza.length);
         }
-        int x, y;
-        x = 0;
-        y = 0;
-        for (int i = 0; i < tabOwca.length; i++) {
-            do {
-                pozycjaOwcyX[i] = randNum.nextInt(plansza.length);
-                pozycjaOwcyY[i] = randNum.nextInt(plansza[0].length);
-            } while (plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]] != 0);
-            plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]] = owca.znak;
+        //Tworzenie Owiec na plaszny
+        tworzOwce(tabOwca,plansza,pozycjaOwcyX,pozycjaOwcyY,owca);
 
-        }
-        for (int i = 0; i < plansza.length; i++) {
-            for (int j = 0; j < plansza[i].length; j++) {
-                if (plansza[i][j] != 'O' && plansza[i][j] != 'M') {
-                    plansza[i][j] = '-';
-                }
+        for(int i = 0; i<plansza.length;i++){
+        for (int j = 0; j < plansza[i].length; j++) {
+            if (plansza[i][j] != 'O' && plansza[i][j] != 'M') {
+                plansza[i][j] = '-';
             }
         }
-        plansza[pozycjaMisiaX][pozycjaMisiaY] = mis.znak;
-
-        //Druk planszy
-        drukPlanszy(plansza);
-        //Rzut koscia dla Misia
-        RzutKosciaM(plansza,pozycjaMisiaX,pozycjaMisiaY,pozycjaOwcyX,pozycjaOwcyY,mis);
-        System.out.println("Następny rzut");
-        //Rzucanie koscia dopoki mis lub Wilk nie dojdzie do mety
-        do {
-            RzutKosciaM(plansza, mis.pozycjaX, mis.pozycjaY, pozycjaOwcyX, pozycjaOwcyY, mis);
-        }while(plansza[0][pozycjaMisiaY] != mis.znak);
     }
+        plansza[pozycjaMisiaX][pozycjaMisiaY]=mis.znak;
+        drukPlanszy(plansza);
+
+    //Rzut koscia dla Misia
+        RzutKosciaM(plansza, pozycjaMisiaX, pozycjaMisiaY, pozycjaOwcyX, pozycjaOwcyY, mis);
+        System.out.println("Następny rzut");
+    //Rzucanie koscia dopoki mis lub Wilk nie dojdzie do mety
+        do {
+        RzutKosciaM(plansza, mis.pozycjaX, mis.pozycjaY, pozycjaOwcyX, pozycjaOwcyY, mis);
+        }while(plansza[0][pozycjaMisiaY]!=mis.znak);
+
+}
     static void drukPlanszy(char[][] plansza){
         for (int i = 0; i < plansza.length; i++) {
             for (int j = 0; j < plansza[i].length; j++) {
@@ -62,6 +59,16 @@ public class Main {
             System.out.println();
         }
     }
+    static void tworzOwce(int[] tabOwca,char[][] plansza,int[] pozycjaOwcyX,int[] pozycjaOwcyY,Owca owca) {
+    Random randNum = new Random();
+        for (int i = 0; i < tabOwca.length; i++) {
+            do {
+                pozycjaOwcyX[i] = randNum.nextInt(plansza.length);
+                pozycjaOwcyY[i] = randNum.nextInt(plansza[0].length);
+            } while (plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]] != 0);
+            plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]] = owca.znak;
+        }
+}
     static void RzutKosciaM(char[][] plansza,int pozycjaMisiaX,int pozycjaMisiaY,int[] pozycjaOwcyX,int[] pozycjaOwcyY,Mis mis){
         Random randNum = new Random();
         Scanner sc = new Scanner(System.in);
@@ -96,7 +103,7 @@ public class Main {
 
             if (plansza[0][pozycjaMisiaY] == mis.znak) {
                 System.out.println("Meta! Gratulacje!");
-                System.out.println("Punktacja:\n Mis:"+mis.punkty+" Wilk: ");
+                System.out.println("Punktacja: \n Mis:"+mis.punkty+" Wilk: ");
                 break;
             }
         }
@@ -125,5 +132,6 @@ class Wilk extends Zwierze{
     Wilk(char znak){
         this.znak = znak;
     }
+    Wilk(){}
 }
 
