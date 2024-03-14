@@ -2,19 +2,25 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Random randNum = new Random();
         Mis mis = new Mis('M');
+        Wilk wilk = new Wilk('W');
         Owca owca = new Owca('O');
+
         char[][] plansza = new char[12][12];
         int[] tabOwca = new int[30];
         int pozycjaMisiaX = plansza.length-1;
         int pozycjaMisiaY = randNum.nextInt(plansza[0].length);
+        int pozycjaWilkaX = plansza.length-1;
+        int pozycjaWilkaY = randNum.nextInt(plansza[0].length);
         int[] pozycjaOwcyX = new int[30];
         int[] pozycjaOwcyY = new int[30];
-
         mis.punkty=0;
+        wilk.punkty=0;
         for (int i = 0; i < tabOwca.length; i++) {
             tabOwca[i] = randNum.nextInt(plansza.length);
         }
@@ -42,6 +48,8 @@ public class Main {
         drukPlanszy(plansza);
         //Rzut koscia dla Misia
         RzutKosciaM(plansza,pozycjaMisiaX,pozycjaMisiaY,pozycjaOwcyX,pozycjaOwcyY,mis);
+        System.out.println("Następny rzut");
+        RzutKosciaM(plansza,mis.pozycjaX,mis.pozycjaY,pozycjaOwcyX,pozycjaOwcyY,mis);
     }
     static void drukPlanszy(char[][] plansza){
         for (int i = 0; i < plansza.length; i++) {
@@ -65,11 +73,13 @@ public class Main {
                 plansza[pozycjaMisiaX][pozycjaMisiaY] = mis.znak;
                 k++;
                 System.out.println("Naciśnij spacje");
+                mis.pozycjaX = pozycjaMisiaX;
+                mis.pozycjaY = pozycjaMisiaY;
                 sc.nextLine();
             }
             for(int i=0; i<pozycjaOwcyX.length; i++){
                 if(plansza[pozycjaMisiaX][pozycjaMisiaY] == plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]]){
-                    System.out.println("Mis zjadl owce");
+                    System.out.println(ANSI_RED+"Mis zjadl owce"+ANSI_RESET);
                     mis.punkty++;
                 }
             }
@@ -102,7 +112,15 @@ class Owca extends Zwierze {
 }
 class Mis extends Zwierze{
     char znak;
+    int pozycjaX;
+    int pozycjaY;
     Mis(char znak){
+        this.znak = znak;
+    }
+}
+class Wilk extends Zwierze{
+    char znak;
+    Wilk(char znak){
         this.znak = znak;
     }
 }
