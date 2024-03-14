@@ -7,12 +7,12 @@ public class Main {
         Random randNum = new Random();
         Mis mis = new Mis('M');
         Owca owca = new Owca('O');
-        char[][] plansza = new char[15][6];
-        int[] tabOwca = new int[15];
+        char[][] plansza = new char[12][12];
+        int[] tabOwca = new int[30];
         int pozycjaMisiaX = plansza.length-1;
         int pozycjaMisiaY = randNum.nextInt(plansza[0].length);
-        int[] pozycjaOwcyX = new int[15];
-        int[] pozycjaOwcyY = new int[15];
+        int[] pozycjaOwcyX = new int[30];
+        int[] pozycjaOwcyY = new int[30];
 
         mis.punkty=0;
         for (int i = 0; i < tabOwca.length; i++) {
@@ -37,10 +37,24 @@ public class Main {
             }
         }
         plansza[pozycjaMisiaX][pozycjaMisiaY] = mis.znak;
+
         //Druk planszy
         drukPlanszy(plansza);
-        
-        int rzutKostka = randNum.nextInt(5) + 1; // Corrected to generate a random number in the range [0, 5]
+        //Rzut koscia dla Misia
+        RzutKosciaM(plansza,pozycjaMisiaX,pozycjaMisiaY,pozycjaOwcyX,pozycjaOwcyY,mis);
+    }
+    static void drukPlanszy(char[][] plansza){
+        for (int i = 0; i < plansza.length; i++) {
+            for (int j = 0; j < plansza[i].length; j++) {
+                System.out.print(plansza[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    static void RzutKosciaM(char[][] plansza,int pozycjaMisiaX,int pozycjaMisiaY,int[] pozycjaOwcyX,int[] pozycjaOwcyY,Mis mis){
+        Random randNum = new Random();
+        Scanner sc = new Scanner(System.in);
+        int rzutKostka = randNum.nextInt(5) + 1;
 
         System.out.println("Wylosowana liczba to: " + rzutKostka);
         int k = 0;
@@ -54,9 +68,9 @@ public class Main {
                 sc.nextLine();
             }
             for(int i=0; i<pozycjaOwcyX.length; i++){
-            if(plansza[pozycjaMisiaX][pozycjaMisiaY] == plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]]){
-                System.out.println("Mis zjadl owce");
-                 mis.punkty++;
+                if(plansza[pozycjaMisiaX][pozycjaMisiaY] == plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]]){
+                    System.out.println("Mis zjadl owce");
+                    mis.punkty++;
                 }
             }
             for (int i = 0; i < plansza.length; i++) {
@@ -72,14 +86,6 @@ public class Main {
                 System.out.println("Punktacja:\n Mis:"+mis.punkty+" Wilk: ");
                 break;
             }
-        }
-    }
-    static void drukPlanszy(char[][] plansza){
-        for (int i = 0; i < plansza.length; i++) {
-            for (int j = 0; j < plansza[i].length; j++) {
-                System.out.print(plansza[i][j] + " ");
-            }
-            System.out.println();
         }
     }
 }
