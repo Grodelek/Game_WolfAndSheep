@@ -33,24 +33,30 @@ public class Main {
         tworzOwce(tabOwca,plansza,pozycjaOwcyX,pozycjaOwcyY,owca);
 
         for(int i = 0; i<plansza.length;i++){
-        for (int j = 0; j < plansza[i].length; j++) {
-            if (plansza[i][j] != 'O' && plansza[i][j] != 'M') {
-                plansza[i][j] = '-';
+            for (int j = 0; j < plansza[i].length; j++) {
+                if (plansza[i][j] != 'O' && plansza[i][j] != 'M' && plansza[i][j] != 'W') {
+                    plansza[i][j] = '-';
+                }
             }
         }
-    }
         plansza[pozycjaMisiaX][pozycjaMisiaY]=mis.znak;
+        plansza[pozycjaWilkaX][pozycjaWilkaY] = wilk[0].znak;
         drukPlanszy(plansza);
 
-    //Rzut koscia dla Misia
-        RzutKosciaM(plansza, pozycjaMisiaX, pozycjaMisiaY, pozycjaOwcyX, pozycjaOwcyY, mis);
+        //Rzut koscia dla Misia
+        System.out.println("Rzut dla Misia");
+        rzutKosciaM(plansza, pozycjaMisiaX, pozycjaMisiaY, pozycjaOwcyX, pozycjaOwcyY, mis);
         System.out.println("Następny rzut");
-    //Rzucanie koscia dopoki mis lub Wilk nie dojdzie do mety
+        //Rzut dla Wilka
+        System.out.println("Rzut dla Wilka");
+        rzutKosciaW(plansza,pozycjaWilkaX,pozycjaWilkaY,pozycjaOwcyX,pozycjaOwcyY,wilk);
+
+        //Rzucanie koscia dopoki mis lub Wilk nie dojdzie do mety
         do {
-        RzutKosciaM(plansza, mis.pozycjaX, mis.pozycjaY, pozycjaOwcyX, pozycjaOwcyY, mis);
+            rzutKosciaM(plansza, mis.pozycjaX, mis.pozycjaY, pozycjaOwcyX, pozycjaOwcyY, mis);
         }while(plansza[0][pozycjaMisiaY]!=mis.znak);
 
-}
+    }
     static void drukPlanszy(char[][] plansza){
         for (int i = 0; i < plansza.length; i++) {
             for (int j = 0; j < plansza[i].length; j++) {
@@ -60,7 +66,7 @@ public class Main {
         }
     }
     static void tworzOwce(int[] tabOwca,char[][] plansza,int[] pozycjaOwcyX,int[] pozycjaOwcyY,Owca owca) {
-    Random randNum = new Random();
+        Random randNum = new Random();
         for (int i = 0; i < tabOwca.length; i++) {
             do {
                 pozycjaOwcyX[i] = randNum.nextInt(plansza.length);
@@ -68,8 +74,34 @@ public class Main {
             } while (plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]] != 0);
             plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]] = owca.znak;
         }
-}
-    static void RzutKosciaM(char[][] plansza,int pozycjaMisiaX,int pozycjaMisiaY,int[] pozycjaOwcyX,int[] pozycjaOwcyY,Mis mis){
+    }
+    static void rzutKosciaW(char[][]plansza,int pozycjaWilkaX,int pozycjaWilkaY,int[] pozycjaOwcyX,int[] pozycjaOwcyY,Wilk[] wilk){
+        Random randNum = new Random();
+        int randMiejsc = randNum.nextInt(5)+1;
+        System.out.println("Wylosowana liczba dla wilka to "+randMiejsc);
+        
+        
+        /// Sprawdzic ten blok
+        try {
+            for(int i=0 ;i<randMiejsc; i++) {
+                int[] nowaPozycjaWX = new int[randMiejsc];
+                     nowaPozycjaWX[i] =  pozycjaWilkaX - randMiejsc;
+                int[] nowaPozycjaWY = new int[randMiejsc];
+                nowaPozycjaWY[i] =  pozycjaWilkaY - randMiejsc;
+                plansza[nowaPozycjaWX[i]][nowaPozycjaWY[i]] = wilk[0].znak;
+                plansza[pozycjaWilkaX][pozycjaWilkaY] = '-';
+            }
+            for(int i=0; i<pozycjaOwcyX.length; i++){
+                if(plansza[pozycjaWilkaX][pozycjaWilkaY] == plansza[pozycjaOwcyX[i]][pozycjaOwcyY[i]]){
+                    System.out.println(ANSI_RED+"Wilk zjadl owce"+ANSI_RESET);
+                    wilk[0].punkty++;
+                }
+            }
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    static void rzutKosciaM(char[][] plansza,int pozycjaMisiaX,int pozycjaMisiaY,int[] pozycjaOwcyX,int[] pozycjaOwcyY,Mis mis){
         Random randNum = new Random();
         Scanner sc = new Scanner(System.in);
         int rzutKostka = randNum.nextInt(5) + 1;
@@ -132,6 +164,9 @@ class Wilk extends Zwierze{
     Wilk(char znak){
         this.znak = znak;
     }
+    Wilk(){}
+}
+
     Wilk(){}
 }
 
